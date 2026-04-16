@@ -1,0 +1,13 @@
+.env
+
+# WordPress runtime/generated content
+wp-content/uploads/
+wp-content/upgrade/
+
+# Nginx Proxy Manager runtime data and certificates
+npm/data/
+npm/letsencrypt/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
