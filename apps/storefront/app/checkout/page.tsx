@@ -20,7 +20,7 @@ const initialForm: CheckoutForm = {
   city: '',
   state: '',
   postalCode: '',
-  country: 'South Korea',
+  country: '대한민국',
 }
 
 export default function CheckoutPage() {
@@ -28,7 +28,7 @@ export default function CheckoutPage() {
   const [form, setForm] = useState<CheckoutForm>(initialForm)
   const [submitted, setSubmitted] = useState(false)
 
-  const shipping = totalPrice >= 50000 ? 0 : 3000
+  const shipping = 0
   const total = totalPrice + shipping
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,14 +49,14 @@ export default function CheckoutPage() {
           <CheckCircle className="h-12 w-12 text-green-600" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold">Order Placed!</h1>
+          <h1 className="text-3xl font-bold">주문이 접수되었습니다</h1>
           <p className="text-muted-foreground mt-2 max-w-md">
-            Thank you for your order, {form.firstName}! You&apos;ll receive a confirmation email at{' '}
-            <span className="font-medium">{form.email}</span>.
+            {form.firstName}님, 결제가 확인되면 문의 페이지에서 구독 정보와 접속 링크를 안내해드릴게요.
+            안내 메일은 <span className="font-medium">{form.email}</span> 로 발송됩니다.
           </p>
         </div>
         <Button asChild size="lg">
-          <Link href="/products">Continue Shopping</Link>
+          <Link href="/inquiry">문의로 이동</Link>
         </Button>
       </div>
     )
@@ -65,9 +65,9 @@ export default function CheckoutPage() {
   if (cart.items.length === 0) {
     return (
       <div className="container py-24 flex flex-col items-center justify-center text-center gap-4">
-        <h1 className="text-2xl font-bold">Your cart is empty</h1>
+        <h1 className="text-2xl font-bold">장바구니가 비어 있습니다</h1>
         <Button asChild>
-          <Link href="/products">Browse Products</Link>
+          <Link href="/products">구독 상품 보기</Link>
         </Button>
       </div>
     )
@@ -78,45 +78,43 @@ export default function CheckoutPage() {
       <div className="mb-8">
         <Button variant="ghost" size="sm" asChild>
           <Link href="/cart">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Cart
+            <ArrowLeft className="mr-2 h-4 w-4" /> 장바구니로 돌아가기
           </Link>
         </Button>
-        <h1 className="text-3xl font-bold mt-4">Checkout</h1>
+        <h1 className="text-3xl font-bold mt-4">결제 정보 입력</h1>
       </div>
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Checkout Form */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Contact */}
             <div className="border rounded-lg p-6 bg-card space-y-4">
-              <h2 className="text-lg font-semibold">Contact Information</h2>
+              <h2 className="text-lg font-semibold">연락처 정보</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
+                  <Label htmlFor="firstName">이름</Label>
                   <Input
                     id="firstName"
                     name="firstName"
                     value={form.firstName}
                     onChange={handleChange}
                     required
-                    placeholder="John"
+                    placeholder="길동"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
+                  <Label htmlFor="lastName">성</Label>
                   <Input
                     id="lastName"
                     name="lastName"
                     value={form.lastName}
                     onChange={handleChange}
                     required
-                    placeholder="Doe"
+                    placeholder="홍"
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">이메일 주소</Label>
                 <Input
                   id="email"
                   name="email"
@@ -124,11 +122,11 @@ export default function CheckoutPage() {
                   value={form.email}
                   onChange={handleChange}
                   required
-                  placeholder="john@example.com"
+                  placeholder="example@email.com"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="phone">연락처</Label>
                 <Input
                   id="phone"
                   name="phone"
@@ -140,46 +138,45 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Shipping Address */}
             <div className="border rounded-lg p-6 bg-card space-y-4">
-              <h2 className="text-lg font-semibold">Shipping Address</h2>
+              <h2 className="text-lg font-semibold">청구지 주소</h2>
               <div className="space-y-2">
-                <Label htmlFor="address">Street Address</Label>
+                <Label htmlFor="address">상세 주소</Label>
                 <Input
                   id="address"
                   name="address"
                   value={form.address}
                   onChange={handleChange}
                   required
-                  placeholder="123 Main Street"
+                  placeholder="서울시 강남구 ..."
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="city">City</Label>
+                  <Label htmlFor="city">도시</Label>
                   <Input
                     id="city"
                     name="city"
                     value={form.city}
                     onChange={handleChange}
                     required
-                    placeholder="Seoul"
+                    placeholder="서울"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="state">State / Province</Label>
+                  <Label htmlFor="state">시/도</Label>
                   <Input
                     id="state"
                     name="state"
                     value={form.state}
                     onChange={handleChange}
-                    placeholder="Gyeonggi-do"
+                    placeholder="서울특별시"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="postalCode">Postal Code</Label>
+                  <Label htmlFor="postalCode">우편번호</Label>
                   <Input
                     id="postalCode"
                     name="postalCode"
@@ -190,40 +187,37 @@ export default function CheckoutPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="country">Country</Label>
+                  <Label htmlFor="country">국가</Label>
                   <Input
                     id="country"
                     name="country"
                     value={form.country}
                     onChange={handleChange}
                     required
-                    placeholder="South Korea"
+                    placeholder="대한민국"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Payment Note */}
             <div className="border rounded-lg p-6 bg-muted/30 space-y-2">
-              <h2 className="text-lg font-semibold">Payment</h2>
+              <h2 className="text-lg font-semibold">구독 안내</h2>
               <p className="text-sm text-muted-foreground">
-                Payment integration is coming soon. This is a UI demonstration only.
-                No payment will be processed.
+                결제 완료 후 <strong>문의 페이지</strong>에서 주문번호를 남겨주시면 구독 정보(VPN Subscription)
+                의 만료일/종류/접속 링크를 전달해드립니다.
               </p>
             </div>
           </div>
 
-          {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="border rounded-lg p-6 bg-card space-y-4 sticky top-20">
-              <h2 className="text-xl font-semibold">Order Summary</h2>
+              <h2 className="text-xl font-semibold">주문 요약</h2>
               <Separator />
               <div className="space-y-3">
                 {cart.items.map((item) => (
-                  <div key={item.product.id} className="flex justify-between text-sm">
+                  <div key={item.product.id} className="flex justify-between text-sm gap-2">
                     <span className="text-muted-foreground">
-                      {item.product.title}{' '}
-                      <span className="text-xs">×{item.quantity}</span>
+                      {item.product.title} <span className="text-xs">×{item.quantity}</span>
                     </span>
                     <span>{formatPrice(item.product.price * item.quantity)}</span>
                   </div>
@@ -232,21 +226,21 @@ export default function CheckoutPage() {
               <Separator />
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="text-muted-foreground">상품 금액</span>
                   <span>{formatPrice(totalPrice)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Shipping</span>
-                  <span>{shipping === 0 ? 'Free' : formatPrice(shipping)}</span>
+                  <span className="text-muted-foreground">전달 수수료</span>
+                  <span>{shipping === 0 ? '무료' : formatPrice(shipping)}</span>
                 </div>
               </div>
               <Separator />
               <div className="flex justify-between font-semibold text-lg">
-                <span>Total</span>
+                <span>합계</span>
                 <span>{formatPrice(total)}</span>
               </div>
               <Button type="submit" className="w-full" size="lg">
-                Place Order
+                주문 완료
               </Button>
             </div>
           </div>

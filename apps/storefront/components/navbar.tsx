@@ -1,43 +1,35 @@
 'use client'
 
 import Link from 'next/link'
-import { ShoppingCart, Package } from 'lucide-react'
 import { useCart } from '@/lib/cart-context'
-import { Button } from '@/components/ui/button'
 
 export function Navbar() {
   const { totalItems } = useCart()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl">
-          <Package className="h-6 w-6" />
-          <span>Tofu Ray</span>
+      <div className="container flex min-h-16 flex-wrap items-center justify-between gap-x-8 gap-y-2 py-2">
+        <Link href="/" className="font-bold text-lg whitespace-nowrap">
+          Tofu Ray VPN
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
-          <Link
-            href="/products"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Products
+        <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-medium">
+          <Link href="/notice" className="text-muted-foreground hover:text-foreground transition-colors">
+            공지사항
+          </Link>
+          <Link href="/mypage" className="text-muted-foreground hover:text-foreground transition-colors">
+            마이페이지
+          </Link>
+          <Link href="/cart" className="text-muted-foreground hover:text-foreground transition-colors">
+            장바구니 ({totalItems})
+          </Link>
+          <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
+            검색
+          </Link>
+          <Link href="/inquiry" className="text-muted-foreground hover:text-foreground transition-colors">
+            문의
           </Link>
         </nav>
-
-        <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/cart" className="relative flex items-center gap-2">
-              <ShoppingCart className="h-4 w-4" />
-              <span>Cart</span>
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                  {totalItems}
-                </span>
-              )}
-            </Link>
-          </Button>
-        </div>
       </div>
     </header>
   )

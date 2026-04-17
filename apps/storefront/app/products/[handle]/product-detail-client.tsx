@@ -30,7 +30,6 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-      {/* Images */}
       <div className="space-y-4">
         <div className="relative aspect-square rounded-lg overflow-hidden bg-muted">
           <Image
@@ -59,17 +58,16 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         )}
       </div>
 
-      {/* Info */}
       <div className="space-y-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="outline">{product.category}</Badge>
             {product.inStock ? (
               <Badge className="bg-green-100 text-green-700 border-green-200 hover:bg-green-100">
-                In Stock
+                판매중
               </Badge>
             ) : (
-              <Badge variant="destructive">Out of Stock</Badge>
+              <Badge variant="destructive">품절</Badge>
             )}
           </div>
           <h1 className="text-3xl font-bold">{product.title}</h1>
@@ -79,15 +77,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 <Star
                   key={i}
                   className={`h-4 w-4 ${
-                    i < Math.floor(product.rating)
-                      ? 'fill-amber-400 text-amber-400'
-                      : 'text-muted-foreground'
+                    i < Math.floor(product.rating) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'
                   }`}
                 />
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              {product.rating} ({product.reviewCount} reviews)
+              {product.rating} ({product.reviewCount}개 후기)
             </span>
           </div>
         </div>
@@ -97,7 +93,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         <Separator />
 
         <div>
-          <h3 className="font-semibold mb-2">Description</h3>
+          <h3 className="font-semibold mb-2">상품 설명</h3>
           <p className="text-muted-foreground leading-relaxed">{product.description}</p>
         </div>
 
@@ -113,10 +109,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
         <Separator />
 
-        {/* Quantity + Add to Cart */}
         <div className="space-y-4">
           <div>
-            <label className="text-sm font-medium mb-2 block">Quantity</label>
+            <label className="text-sm font-medium mb-2 block">수량</label>
             <div className="flex items-center gap-3">
               <Button
                 variant="outline"
@@ -127,31 +122,22 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 <Minus className="h-4 w-4" />
               </Button>
               <span className="w-12 text-center font-medium">{quantity}</span>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setQuantity((q) => q + 1)}
-              >
+              <Button variant="outline" size="icon" onClick={() => setQuantity((q) => q + 1)}>
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
           </div>
 
-          <Button
-            size="lg"
-            className="w-full"
-            onClick={handleAddToCart}
-            disabled={!product.inStock}
-          >
+          <Button size="lg" className="w-full" onClick={handleAddToCart} disabled={!product.inStock}>
             {added ? (
               <>
                 <Check className="mr-2 h-5 w-5" />
-                Added to Cart!
+                장바구니에 담았습니다
               </>
             ) : (
               <>
                 <ShoppingCart className="mr-2 h-5 w-5" />
-                {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                {product.inStock ? '장바구니 담기' : '품절'}
               </>
             )}
           </Button>
