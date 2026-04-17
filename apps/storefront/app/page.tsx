@@ -9,20 +9,22 @@ export default function HomePage() {
 
   return (
     <div>
-      <section className="relative bg-muted/30 py-24 overflow-hidden">
-        <div className="container flex flex-col items-center text-center gap-6">
+      <section className="relative bg-muted/30 min-h-screen flex items-center overflow-hidden">
+        <div className="container flex flex-col items-start justify-center gap-6 py-24">
           <span className="text-sm font-medium text-muted-foreground uppercase tracking-widest">
-            VPN Subscription Store
+            
           </span>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight max-w-3xl">
-            한국어 지원 VPN 구독,
-            <span className="text-primary block">구매부터 안내까지 한 번에</span>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight max-w-3xl lacquer-regular">
+            
+            <span className="text-primary">Tofu-ray</span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            구독 상품을 결제한 뒤 문의 채널에서 계정 정보와 접속 링크를 안내해드립니다.
-            빠르고 안전한 연결을 경험해보세요.
+          <p className="text-lg text-muted-foreground max-w-2xl text-left">
+           
+            </p>
+            <p className="text-left">
+            빠르고 안정적인 VPN 구독 서비스 입니다.
           </p>
-          <div className="flex gap-4 flex-wrap justify-center">
+          <div className="flex gap-4 flex-wrap justify-start">
             <Button size="lg" asChild>
               <Link href="/products">
                 구독 상품 보기 <ArrowRight className="ml-2 h-4 w-4" />
@@ -43,7 +45,7 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="font-semibold">안전한 네트워크</h3>
-              <p className="text-sm text-muted-foreground">개인정보 보호 중심 VPN 구독</p>
+              <p className="text-sm text-muted-foreground">VLESS + Reality 프로토콜</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -52,7 +54,7 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="font-semibold">간편한 계정 발급</h3>
-              <p className="text-sm text-muted-foreground">구매 후 문의에서 즉시 계정 안내</p>
+              <p className="text-sm text-muted-foreground">구매 후 문의에서 계정 안내</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -71,8 +73,7 @@ export default function HomePage() {
         <div className="container">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-bold">추천 구독 상품</h2>
-              <p className="text-muted-foreground mt-1">사용 목적에 맞는 VPN 플랜을 선택하세요</p>
+              <h2 className="text-2xl font-bold">구독제</h2>
             </div>
             <Button variant="ghost" asChild>
               <Link href="/products">
@@ -90,15 +91,14 @@ export default function HomePage() {
 
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container text-center">
-          <h2 className="text-3xl font-bold mb-4">구매 후 문의로 최종 발급 완료</h2>
+          <h2 className="text-3xl font-bold mb-4">문의 방법</h2>
           <p className="text-primary-foreground/80 mb-8 max-w-lg mx-auto">
             결제 완료 후 문의 탭에서 주문번호를 알려주시면, 관리자가 구독 정보와 접속 링크를
             전달해드립니다.
           </p>
           <Button
-            variant="outline"
             size="lg"
-            className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+            className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
             asChild
           >
             <Link href="/inquiry">문의 시작하기</Link>

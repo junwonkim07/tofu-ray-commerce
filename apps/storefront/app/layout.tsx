@@ -4,20 +4,20 @@ import { CartProvider } from '@/lib/cart-context'
 import { Navbar } from '@/components/navbar'
 
 export const metadata: Metadata = {
-  title: 'Tofu Ray VPN 구독 스토어',
-  description: 'VPN 구독 상품을 구매하고 문의 채널로 안내받는 스토어입니다.',
+  title: 'Tofu-ray',
+  description: 'VLESS shop.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className="dark">
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased" suppressHydrationWarning>
         <CartProvider>
           <Navbar />
           <main className="min-h-screen">{children}</main>
           <footer className="border-t py-8 mt-16">
             <div className="container text-center text-sm text-muted-foreground">
-              <p>© 2026 Tofu Ray VPN. All rights reserved.</p>
+              <p>© 2026 Junwon Kim. All rights reserved.</p>
             </div>
           </footer>
         </CartProvider>

@@ -8,7 +8,7 @@ import { formatPrice } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { ShoppingCart, Star, Minus, Plus, Check } from 'lucide-react'
+import { ShoppingCart, Minus, Plus, Check } from 'lucide-react'
 
 interface ProductDetailClientProps {
   product: Product
@@ -71,21 +71,6 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             )}
           </div>
           <h1 className="text-3xl font-bold">{product.title}</h1>
-          <div className="flex items-center gap-2 mt-2">
-            <div className="flex items-center gap-1">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-4 w-4 ${
-                    i < Math.floor(product.rating) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'
-                  }`}
-                />
-              ))}
-            </div>
-            <span className="text-sm text-muted-foreground">
-              {product.rating} ({product.reviewCount}개 후기)
-            </span>
-          </div>
         </div>
 
         <div className="text-3xl font-bold">{formatPrice(product.price, product.currency)}</div>
