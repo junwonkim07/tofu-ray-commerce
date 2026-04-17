@@ -2,7 +2,7 @@ import { mockProducts } from '@tofu-ray/core'
 import { ProductCard } from '@/components/product-card'
 
 export const metadata = {
-  title: 'Products | Tofu Ray Commerce',
+  title: '구독 상품 | Tofu Ray VPN',
 }
 
 export default function ProductsPage() {
@@ -11,15 +11,12 @@ export default function ProductsPage() {
   return (
     <div className="container py-12">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">All Products</h1>
-        <p className="text-muted-foreground mt-2">
-          {mockProducts.length} products available
-        </p>
+        <h1 className="text-3xl font-bold">전체 구독 상품</h1>
+        <p className="text-muted-foreground mt-2">{mockProducts.length}개의 플랜이 준비되어 있습니다.</p>
       </div>
 
-      {/* Category filters */}
       <div className="flex flex-wrap gap-2 mb-8">
-        <span className="text-sm font-medium text-muted-foreground py-1">Filter by:</span>
+        <span className="text-sm font-medium text-muted-foreground py-1">구독 유형:</span>
         {categories.map((cat) => (
           <span
             key={cat}

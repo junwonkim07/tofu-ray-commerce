@@ -18,26 +18,23 @@ export default function CartPage() {
           <ShoppingBag className="h-12 w-12 text-muted-foreground" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold">Your cart is empty</h1>
-          <p className="text-muted-foreground mt-2">
-            Add some products to your cart to get started.
-          </p>
+          <h1 className="text-2xl font-bold">장바구니가 비어 있습니다</h1>
+          <p className="text-muted-foreground mt-2">구독 상품을 담은 뒤 결제를 진행해 주세요.</p>
         </div>
         <Button asChild size="lg">
-          <Link href="/products">Browse Products</Link>
+          <Link href="/products">구독 상품 보러가기</Link>
         </Button>
       </div>
     )
   }
 
-  const shipping = totalPrice >= 50000 ? 0 : 3000
+  const shipping = 0
 
   return (
     <div className="container py-12">
-      <h1 className="text-3xl font-bold mb-8">Shopping Cart ({totalItems} items)</h1>
+      <h1 className="text-3xl font-bold mb-8">장바구니 ({totalItems}개)</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
           {cart.items.map((item) => (
             <div key={item.product.id} className="flex gap-4 p-4 border rounded-lg bg-card">
@@ -54,10 +51,7 @@ export default function CartPage() {
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <h3 className="font-semibold truncate">
-                      <Link
-                        href={`/products/${item.product.handle}`}
-                        className="hover:underline"
-                      >
+                      <Link href={`/products/${item.product.handle}`} className="hover:underline">
                         {item.product.title}
                       </Link>
                     </h3>
@@ -66,7 +60,7 @@ export default function CartPage() {
                   <button
                     onClick={() => removeItem(item.product.id)}
                     className="text-muted-foreground hover:text-destructive transition-colors shrink-0"
-                    aria-label="Remove item"
+                    aria-label="상품 삭제"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -100,38 +94,32 @@ export default function CartPage() {
           ))}
         </div>
 
-        {/* Order Summary */}
         <div className="lg:col-span-1">
           <div className="border rounded-lg p-6 bg-card space-y-4 sticky top-20">
-            <h2 className="text-xl font-semibold">Order Summary</h2>
+            <h2 className="text-xl font-semibold">주문 요약</h2>
             <Separator />
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Subtotal</span>
+                <span className="text-muted-foreground">상품 금액</span>
                 <span>{formatPrice(totalPrice)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Shipping</span>
-                <span>{shipping === 0 ? 'Free' : formatPrice(shipping)}</span>
+                <span className="text-muted-foreground">전달 수수료</span>
+                <span>{shipping === 0 ? '무료' : formatPrice(shipping)}</span>
               </div>
-              {totalPrice < 50000 && (
-                <p className="text-xs text-muted-foreground">
-                  Add {formatPrice(50000 - totalPrice)} more for free shipping
-                </p>
-              )}
             </div>
             <Separator />
             <div className="flex justify-between font-semibold text-lg">
-              <span>Total</span>
+              <span>합계</span>
               <span>{formatPrice(totalPrice + shipping)}</span>
             </div>
             <Button className="w-full" size="lg" asChild>
               <Link href="/checkout">
-                Proceed to Checkout <ArrowRight className="ml-2 h-4 w-4" />
+                결제 진행 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button variant="outline" className="w-full" asChild>
-              <Link href="/products">Continue Shopping</Link>
+              <Link href="/products">계속 쇼핑하기</Link>
             </Button>
           </div>
         </div>

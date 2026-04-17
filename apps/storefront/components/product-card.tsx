@@ -25,7 +25,7 @@ export function ProductCard({ product }: ProductCardProps) {
           {!product.inStock && (
             <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
               <Badge variant="secondary" className="text-sm">
-                Out of Stock
+                품절
               </Badge>
             </div>
           )}
