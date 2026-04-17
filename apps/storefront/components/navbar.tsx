@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useCart } from '@/lib/cart-context'
-import { Package, Bell, User, ShoppingCart, Search, MessageSquare, LogIn } from 'lucide-react'
+import { Package } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export function Navbar() {
@@ -16,31 +16,25 @@ export function Navbar() {
           <span className="lacquer-regular">Tofu-ray</span>
         </Link>
 
-        <nav className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm font-medium">
-          <Link href="/notice" className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
-            <Bell className="h-4 w-4" />
+        <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium">
+          <Link href="/notice" className="text-muted-foreground hover:text-foreground transition-colors">
             공지사항
           </Link>
-          <Link href="/mypage" className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
-            <User className="h-4 w-4" />
+          <Link href="/mypage" className="text-muted-foreground hover:text-foreground transition-colors">
             마이페이지
           </Link>
-          <Link href="/cart" className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
-            <ShoppingCart className="h-4 w-4" />
+          <Link href="/cart" className="text-muted-foreground hover:text-foreground transition-colors">
             장바구니 ({totalItems})
           </Link>
-          <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
-            <Search className="h-4 w-4" />
+          <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
             검색
           </Link>
-          <Link href="/inquiry" className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
-            <MessageSquare className="h-4 w-4" />
+          <Link href="/inquiry" className="text-muted-foreground hover:text-foreground transition-colors">
             문의
           </Link>
           <div className="flex items-center gap-2 ml-2 pl-2 border-l border-border">
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/login" className="flex items-center gap-2">
-                <LogIn className="h-4 w-4" />
+              <Link href="/login">
                 로그인
               </Link>
             </Button>

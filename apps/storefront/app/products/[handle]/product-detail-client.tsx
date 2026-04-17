@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import { useCart } from '@/lib/cart-context'
 import type { Product } from '@tofu-ray/core'
 import { formatPrice } from '@/lib/utils'
@@ -14,9 +13,18 @@ interface ProductDetailClientProps {
   product: Product
 }
 
+function getEnglishLabel(handle: string): string {
+  const labelMap: Record<string, string> = {
+    monthly: 'Monthly',
+    quarterly: 'Quarterly',
+    yearly: 'Yearly',
+    'vpn-team-monthly': '5-account team',
+  }
+  return labelMap[handle] || handle
+}
+
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const { addItem } = useCart()
-  const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [added, setAdded] = useState(false)
 
@@ -30,32 +38,14 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-      <div className="space-y-4">
-        <div className="relative aspect-square rounded-lg overflow-hidden bg-muted">
-          <Image
-            src={product.images[selectedImage]}
-            alt={product.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            priority
-          />
-        </div>
-        {product.images.length > 1 && (
-          <div className="flex gap-3">
-            {product.images.map((img, idx) => (
-              <button
-                key={idx}
-                onClick={() => setSelectedImage(idx)}
-                className={`relative h-20 w-20 rounded-md overflow-hidden border-2 transition-colors ${
-                  selectedImage === idx ? 'border-primary' : 'border-transparent'
-                }`}
-              >
-                <Image src={img} alt={`${product.title} ${idx + 1}`} fill className="object-cover" sizes="80px" />
-              </button>
-            ))}
+      <div className="flex items-center justify-center">
+        <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+          <div className="text-center px-4">
+            <h2 className="text-6xl md:text-7xl font-bold lacquer-regular text-primary break-words">
+              {getEnglishLabel(product.handle)}
+            </h2>
           </div>
-        )}
+        </div>
       </div>
 
       <div className="space-y-6">
