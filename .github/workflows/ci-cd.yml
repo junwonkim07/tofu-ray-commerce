@@ -32,6 +32,11 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
+      - name: Install native build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 make g++
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -40,6 +45,9 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Rebuild sqlite3 bindings
+        run: pnpm rebuild sqlite3
 
       - name: Start backend
         run: |
@@ -93,11 +101,19 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
+      - name: Install native build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 make g++
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm build
+
+      - name: Rebuild sqlite3 bindings
+        run: pnpm rebuild sqlite3
 
       - name: Package backend artifact
         run: |
