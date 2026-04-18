@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
+import { authAPI } from '@/lib/api-client'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -19,6 +20,7 @@ export default function LoginPage() {
     password: '',
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -30,12 +32,31 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
     setIsLoading(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setIsLoading(false)
-    // Navigate to redirect page or inquiry
-    router.push(redirect)
+
+    try {
+      const result = await authAPI.login(formData.email, formData.password)
+
+      if (result.error) {
+        setError(result.error)
+        setIsLoading(false)
+        return
+      }
+
+      if (result.data) {
+        // Save token and user info
+        localStorage.setItem('authToken', result.data.token)
+        localStorage.setItem('userId', result.data.userId)
+        localStorage.setItem('userEmail', result.data.email)
+
+        // Navigate to redirect page or inquiry
+        router.push(redirect)
+      }
+    } catch (err) {
+      setError('로그인 중 오류가 발생했습니다')
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -48,6 +69,11 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {error && (
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500 text-red-600 rounded-md text-sm">
+              {error}
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">

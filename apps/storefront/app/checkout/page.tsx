@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { CheckCircle, ArrowLeft } from 'lucide-react'
+import { orderAPI } from '@/lib/api-client'
 import type { CheckoutForm } from '@tofu-ray/core'
 
 const initialForm: CheckoutForm = {
