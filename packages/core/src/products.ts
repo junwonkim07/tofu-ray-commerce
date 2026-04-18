@@ -58,7 +58,7 @@ export const mockProducts: Product[] = [
   {
     id: '4',
     handle: 'vpn-team-monthly',
-    title: 'VPN 팀 월간 구독 (5계정)',
+    title: '가족 요금제',
     description:
       '소규모 팀/가족을 위한 월간 5계정 플랜입니다. 통합 1TB 까지 사용 가능합니다.',
     price: 120,

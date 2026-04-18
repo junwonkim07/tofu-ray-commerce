@@ -136,7 +136,7 @@ export default function CartPage() {
               <span>{formatPrice(totalPrice + shipping, currency)}</span>
             </div>
             <Button className="w-full" size="lg" asChild>
-              <Link href="/checkout">
+              <Link href="/login?redirect=/checkout">
                 결제 진행 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>

@@ -1,8 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useCart } from '@/lib/cart-context'
+import { formatPrice } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Card } from '@/components/ui/card'
 
 type InquiryMode = 'chat' | 'wechat'
 
@@ -12,16 +15,62 @@ interface Message {
   text: string
 }
 
+function getEnglishLabel(handle: string): string {
+  const labelMap: Record<string, string> = {
+    monthly: 'Monthly',
+    quarterly: 'Quarterly',
+    yearly: 'Yearly',
+    'vpn-team-monthly': '5-account team',
+  }
+  return labelMap[handle] || handle
+}
+
 export default function InquiryPage() {
+  const { cart } = useCart()
   const [mode, setMode] = useState<InquiryMode>('chat')
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 'm1',
-      sender: 'admin',
-      text: '안녕하세요! 주문번호를 보내주시면 구독 정보와 링크를 안내해드릴게요.',
-    },
-  ])
+  const [messages, setMessages] = useState<Message[]>([])
   const [draft, setDraft] = useState('')
+
+  // Initialize messages with cart info
+  useEffect(() => {
+    const initialMessages: Message[] = [
+      {
+        id: 'm0',
+        sender: 'admin',
+        text: '안녕하세요! 구독을 원하신 상품 정보를 확인했습니다. 아래 정보로 구독을 진행하시겠습니까?',
+      },
+    ]
+
+    if (cart.items.length > 0) {
+      const cartSummary = cart.items
+        .map(
+          (item) =>
+            `• ${getEnglishLabel(item.product.handle)} x${item.quantity} - ${formatPrice(item.product.price * item.quantity, item.product.currency)}`
+        )
+        .join('\n')
+
+      const cartMessage: Message = {
+        id: 'cart-info',
+        sender: 'admin',
+        text: `📦 주문 정보:\n${cartSummary}\n\n총액: ${formatPrice(cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0), cart.items[0]?.product.currency || 'CNY')}`,
+      }
+      initialMessages.push(cartMessage)
+
+      initialMessages.push({
+        id: 'm1',
+        sender: 'admin',
+        text: '위 상품에 대해 구독 발급을 진행하겠습니다. 구독 링크와 접속 정보는 이메일로 발송될 예정입니다.',
+      })
+    } else {
+      initialMessages.push({
+        id: 'm1',
+        sender: 'admin',
+        text: '주문번호 또는 구독을 원하시는 상품을 알려주세요.',
+      })
+    }
+
+    setMessages(initialMessages)
+  }, [cart])
 
   const sendMessage = () => {
     const content = draft.trim()
@@ -63,11 +112,11 @@ export default function InquiryPage() {
 
       {mode === 'chat' ? (
         <section className="border rounded-lg bg-card p-4 space-y-4">
-          <div className="space-y-2 max-h-[360px] overflow-auto pr-1">
+          <div className="space-y-2 max-h-[500px] overflow-auto pr-1">
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`rounded-md px-3 py-2 text-sm w-fit max-w-[80%] ${
+                className={`rounded-md px-3 py-2 text-sm whitespace-pre-wrap w-fit max-w-[80%] ${
                   message.sender === 'user'
                     ? 'ml-auto bg-primary text-primary-foreground'
                     : 'bg-muted text-foreground'
