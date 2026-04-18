@@ -52,14 +52,16 @@ export default function AdminLoginPage() {
               {error}
             </div>
           )}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
             <div className="space-y-2">
               <label className="text-sm font-medium">이메일</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="email"
-                  placeholder={ADMIN_EMAIL}
+                  name="adminEmail"
+                  autoComplete="off"
+                  placeholder="관리자 이메일"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading}
@@ -74,6 +76,8 @@ export default function AdminLoginPage() {
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="password"
+                  name="adminPassword"
+                  autoComplete="new-password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -89,7 +93,6 @@ export default function AdminLoginPage() {
 
             <div className="text-xs text-muted-foreground text-center space-y-1">
               <p>관리자 계정은 apps/admin/.env.local에서 변경할 수 있습니다.</p>
-              <p>기본 이메일: {ADMIN_EMAIL}</p>
             </div>
           </form>
         </CardContent>
