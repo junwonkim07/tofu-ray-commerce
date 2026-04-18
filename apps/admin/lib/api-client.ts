@@ -10,9 +10,9 @@ async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<Api
     const url = `${API_BASE_URL}${endpoint}`
     const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null
 
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...options?.headers,
+      ...((options?.headers as Record<string, string> | undefined) || {}),
     }
 
     if (token) {

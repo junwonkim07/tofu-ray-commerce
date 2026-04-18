@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Lock, Mail } from 'lucide-react'
 
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@tofu-ray.com'
+const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123'
+
 export default function AdminLoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -22,7 +25,7 @@ export default function AdminLoginPage() {
     try {
       // 관리자 로그인 (간단한 데모용)
       // 실제에는 별도의 관리자 인증 엔드포인트를 만들어야 합니다
-      if (email === 'admin@tofu-ray.com' && password === 'admin123') {
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
         localStorage.setItem('adminToken', 'admin-' + Date.now())
         localStorage.setItem('adminEmail', email)
         router.push('/dashboard')
@@ -56,7 +59,7 @@ export default function AdminLoginPage() {
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="email"
-                  placeholder="admin@tofu-ray.com"
+                  placeholder={ADMIN_EMAIL}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading}
@@ -85,9 +88,8 @@ export default function AdminLoginPage() {
             </Button>
 
             <div className="text-xs text-muted-foreground text-center space-y-1">
-              <p>테스트 계정:</p>
-              <p>이메일: admin@tofu-ray.com</p>
-              <p>비밀번호: admin123</p>
+              <p>관리자 계정은 apps/admin/.env.local에서 변경할 수 있습니다.</p>
+              <p>기본 이메일: {ADMIN_EMAIL}</p>
             </div>
           </form>
         </CardContent>
