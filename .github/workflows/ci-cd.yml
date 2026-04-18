@@ -48,7 +48,9 @@ jobs:
         run: pnpm build
 
       - name: Rebuild sqlite3 bindings
-        run: pnpm rebuild sqlite3
+        run: pnpm --filter @tofu-ray/backend rebuild sqlite3
+        env:
+          npm_config_build_from_source: true
 
       - name: Start backend
         run: |
@@ -114,7 +116,9 @@ jobs:
         run: pnpm build
 
       - name: Rebuild sqlite3 bindings
-        run: pnpm rebuild sqlite3
+        run: pnpm --filter @tofu-ray/backend rebuild sqlite3
+        env:
+          npm_config_build_from_source: true
 
       - name: Package backend artifact
         run: |
@@ -128,4 +132,5 @@ jobs:
           name: backend-dist
           path: artifacts/backend
           if-no-files-found: error
+
 
