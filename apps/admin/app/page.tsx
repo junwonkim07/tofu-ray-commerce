@@ -43,8 +43,7 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-2">
-          <CardTitle className="text-2xl">🔐 Tofu Ray 관리자 로그인 (Updated)</CardTitle>
-          <CardDescription>관리자만 접근 가능합니다</CardDescription>
+          <CardTitle className="text-2xl">Admin</CardTitle>
         </CardHeader>
         <CardContent>
           {error && (
