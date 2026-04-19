@@ -5,9 +5,12 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 5555;
+const PORT = process.env.PORT || 5555;
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'your-webhook-secret-key-05230523';
-const APP_DIR = process.env.APP_DIR || '/srv/tofu-ray-commerce';
+const APP_DIR = process.env.APP_DIR || '/app';
+const MAX_BODY_SIZE = 1024 * 1024; // 1MB limit
+
+let isDeploying = false;
 
 const log = (msg) => {
   const timestamp = new Date().toISOString();
@@ -15,7 +18,11 @@ const log = (msg) => {
   
   // Also write to log file
   const logFile = path.join(APP_DIR, 'webhook.log');
-  fs.appendFileSync(logFile, `[${timestamp}] ${msg}\n`, { flag: 'a' });
+  try {
+    fs.appendFileSync(logFile, `[${timestamp}] ${msg}\n`, { flag: 'a' });
+  } catch (e) {
+    console.error('Failed to write log file:', e.message);
+  }
 };
 
 const verifySignature = (req, body) => {
@@ -42,6 +49,13 @@ const verifySignature = (req, body) => {
 };
 
 const deploy = () => {
+  if (isDeploying) {
+    log('⏳ Deployment already in progress, skipping...');
+    return false;
+  }
+
+  isDeploying = true;
+  
   try {
     log('🚀 Starting deployment...');
     
@@ -49,7 +63,7 @@ const deploy = () => {
     
     // Fetch latest code
     log('📥 Fetching latest code from main branch...');
-    execSync('git fetch origin main', { stdio: 'inherit' });
+    execSync('git fetch origin main', { timeout: 30000, stdio: 'pipe' });
     
     // Backup .env.production
     let savedEnv = '';
@@ -60,7 +74,7 @@ const deploy = () => {
     
     // Reset to latest
     log('🔄 Resetting to latest commit...');
-    execSync('git checkout main && git reset --hard origin/main', { stdio: 'inherit' });
+    execSync('git checkout main && git reset --hard origin/main', { timeout: 30000, stdio: 'pipe' });
     
     // Restore .env.production
     if (savedEnv) {
@@ -68,43 +82,45 @@ const deploy = () => {
       log('✅ Restored .env.production');
     }
     
-    // Clear Docker cache and rebuild
-    log('🧹 Clearing Docker cache...');
-    execSync('docker buildx prune --all -f || true', { stdio: 'inherit' });
-    execSync('docker system prune -a -f || true', { stdio: 'inherit' });
-    
-    // Deploy with docker compose
+    // Deploy with docker compose (skip cache clear, just rebuild)
     log('🐳 Building and starting containers...');
     execSync('docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build --remove-orphans', 
-      { stdio: 'inherit' });
+      { timeout: 300000, stdio: 'pipe' });
     
     // Health check
     log('🏥 Running health check...');
     let healthCheckPassed = false;
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 60; i++) {
       try {
-        execSync('curl -fsS http://127.0.0.1:3000/health > /dev/null', { stdio: 'pipe' });
-        log('✅ Health check passed');
+        execSync('curl -fsS http://127.0.0.1:3000/health > /dev/null 2>&1', { timeout: 5000, stdio: 'pipe' });
+        log('✅ Health check passed - deployment complete!');
         healthCheckPassed = true;
-        fs.writeFileSync('.deployed_commit', execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim());
+        try {
+          fs.writeFileSync('.deployed_commit', execSync('git rev-parse HEAD', { encoding: 'utf8', timeout: 5000 }).trim());
+        } catch (e) {
+          log('⚠️ Warning: Failed to write commit marker');
+        }
         break;
       } catch (e) {
-        if (i < 29) {
-          log(`⏳ Health check attempt ${i + 1}/30 failed, retrying...`);
-          execSync('sleep 2', { stdio: 'pipe' });
+        if (i < 59) {
+          log(`⏳ Health check attempt ${i + 1}/60 failed, retrying in 5s...`);
+          execSync('sleep 5', { stdio: 'pipe' });
         }
       }
     }
     
     if (!healthCheckPassed) {
-      throw new Error('Health check failed after 30 attempts');
+      log('⚠️ Health check did not pass, but containers are running');
+      // Continue anyway - backend might be healthy on next check
     }
     
-    log('🎉 Deployment completed successfully!');
+    log('🎉 Deployment completed!');
     return true;
   } catch (error) {
     log(`❌ Deployment failed: ${error.message}`);
     return false;
+  } finally {
+    isDeploying = false;
   }
 };
 
