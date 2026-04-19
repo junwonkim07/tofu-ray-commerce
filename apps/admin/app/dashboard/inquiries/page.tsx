@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -63,7 +63,7 @@ export default function InquiriesPage() {
       {/* Header */}
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
-          <Button variant="ghost" asChild className="mb-4">
+          <Button variant="ghost" className="mb-4" type="button">
             <Link href="/dashboard" className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
               대시보드로 돌아가기

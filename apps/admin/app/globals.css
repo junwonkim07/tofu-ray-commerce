@@ -60,8 +60,7 @@ html {
 
 body {
   @apply bg-background text-foreground;
-  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Segoe UI', 'Roboto',
-    sans-serif;
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
   min-height: 100vh;
 }
 
@@ -71,8 +70,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Segoe UI', 'Roboto',
-    sans-serif;
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
 }
 
 .dark {
