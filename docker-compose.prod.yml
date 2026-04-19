@@ -73,7 +73,7 @@ services:
       - .:/app
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-your-secret-key}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-your-webhook-secret-key-05230523}
       APP_DIR: /app
     command: node webhook-server.js
     expose:

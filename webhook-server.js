@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 5555;
-const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'your-secret-key';
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'your-webhook-secret-key-05230523';
 const APP_DIR = process.env.APP_DIR || '/srv/tofu-ray-commerce';
 
 const log = (msg) => {
