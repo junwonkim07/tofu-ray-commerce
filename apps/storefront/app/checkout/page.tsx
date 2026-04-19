@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useCart } from '@/lib/cart-context'
 import { formatPrice } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -9,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { CheckCircle, ArrowLeft } from 'lucide-react'
+import { orderAPI } from '@/lib/api-client'
 import type { CheckoutForm } from '@tofu-ray/core'
 
 const initialForm: CheckoutForm = {
@@ -24,22 +26,62 @@ const initialForm: CheckoutForm = {
 }
 
 export default function CheckoutPage() {
-  const { cart, totalPrice, clearCart } = useCart()
+  const router = useRouter()
+  const { cart, totalPrice } = useCart()
   const [form, setForm] = useState<CheckoutForm>(initialForm)
   const [submitted, setSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const shipping = 0
   const total = totalPrice + shipping
+  const currency = cart.items.length > 0 ? cart.items[0].product.currency : 'CNY'
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSubmitted(true)
-    clearCart()
+    setError(null)
+    setIsLoading(true)
+
+    try {
+      const userId = localStorage.getItem('userId')
+      const orderData = {
+        userId: userId || null,
+        items: cart.items,
+        totalPrice,
+        currency,
+        email: form.email,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        phone: form.phone,
+        address: form.address,
+        city: form.city,
+        state: form.state,
+        postalCode: form.postalCode,
+        country: form.country,
+      }
+
+      const result = await orderAPI.create(orderData)
+
+      if (result.error) {
+        setError(result.error)
+        setIsLoading(false)
+        return
+      }
+
+      if (result.data) {
+        // Save order number to localStorage
+        localStorage.setItem('lastOrderNumber', result.data.orderNumber)
+        setSubmitted(true)
+      }
+    } catch (err) {
+      setError('주문 처리 중 오류가 발생했습니다')
+      setIsLoading(false)
+    }
   }
 
   if (submitted) {
@@ -49,14 +91,13 @@ export default function CheckoutPage() {
           <CheckCircle className="h-12 w-12 text-green-600" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold">주문이 접수되었습니다</h1>
+          <h1 className="text-3xl font-bold">결제 정보가 접수되었습니다</h1>
           <p className="text-muted-foreground mt-2 max-w-md">
-            {form.firstName}님, 결제가 확인되면 문의 페이지에서 구독 정보와 접속 링크를 안내해드릴게요.
-            안내 메일은 <span className="font-medium">{form.email}</span> 로 발송됩니다.
+            로그인 후 문의 페이지에서 구독 정보를 확인하고 발급을 요청해주세요.
           </p>
         </div>
-        <Button asChild size="lg">
-          <Link href="/inquiry">문의로 이동</Link>
+        <Button onClick={() => router.push('/login')} size="lg">
+          로그인하러 가기
         </Button>
       </div>
     )
@@ -85,6 +126,11 @@ export default function CheckoutPage() {
       </div>
 
       <form onSubmit={handleSubmit}>
+        {error && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500 text-red-600 rounded-lg">
+            {error}
+          </div>
+        )}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
             <div className="border rounded-lg p-6 bg-card space-y-4">
@@ -219,7 +265,7 @@ export default function CheckoutPage() {
                     <span className="text-muted-foreground">
                       {item.product.title} <span className="text-xs">×{item.quantity}</span>
                     </span>
-                    <span>{formatPrice(item.product.price * item.quantity)}</span>
+                    <span>{formatPrice(item.product.price * item.quantity, item.product.currency)}</span>
                   </div>
                 ))}
               </div>
@@ -227,20 +273,20 @@ export default function CheckoutPage() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">상품 금액</span>
-                  <span>{formatPrice(totalPrice)}</span>
+                  <span>{formatPrice(totalPrice, currency)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">전달 수수료</span>
-                  <span>{shipping === 0 ? '무료' : formatPrice(shipping)}</span>
+                  <span>{shipping === 0 ? '무료' : formatPrice(shipping, currency)}</span>
                 </div>
               </div>
               <Separator />
               <div className="flex justify-between font-semibold text-lg">
                 <span>합계</span>
-                <span>{formatPrice(total)}</span>
+                <span>{formatPrice(total, currency)}</span>
               </div>
-              <Button type="submit" className="w-full" size="lg">
-                주문 완료
+              <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+                {isLoading ? '주문 처리 중...' : '주문 완료'}
               </Button>
             </div>
           </div>
