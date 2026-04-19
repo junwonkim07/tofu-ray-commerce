@@ -43,8 +43,8 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-2">
-          <CardTitle className="text-2xl">관리자 로그인</CardTitle>
-          <CardDescription>관리자 계정으로 접속하세요</CardDescription>
+          <CardTitle className="text-2xl">Admin</CardTitle>
+          <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>
           {error && (
@@ -78,7 +78,7 @@ export default function AdminLoginPage() {
                   type="password"
                   name="adminPassword"
                   autoComplete="new-password"
-                  placeholder="••••••••"
+                  placeholder="비번"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
@@ -92,7 +92,7 @@ export default function AdminLoginPage() {
             </Button>
 
             <div className="text-xs text-muted-foreground text-center space-y-1">
-              <p>관리자 계정은 apps/admin/.env.local에서 변경할 수 있습니다.</p>
+              <p></p>
             </div>
           </form>
         </CardContent>
