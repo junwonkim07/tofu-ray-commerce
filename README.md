@@ -1,5 +1,7 @@
 # Tofu Ray Commerce
 
+Webhook: 자동 배포 활성화 ✅
+
 A modern e-commerce platform built with a **pnpm monorepo**, featuring a Next.js storefront with shadcn/ui and a Medusa backend (coming soon).
 
 ## Monorepo Structure
