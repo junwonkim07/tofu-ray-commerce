@@ -1,0 +1,18 @@
+[Unit]
+Description=Tofu Ray Commerce Webhook Deployment Server
+After=network.target
+
+[Service]
+Type=simple
+User=deploy
+WorkingDirectory=/home/deploy/tofu-ray-commerce
+ExecStart=/usr/bin/node /home/deploy/tofu-ray-commerce/webhook-server.js
+Restart=always
+RestartSec=10
+Environment="WEBHOOK_SECRET=%WEBHOOK_SECRET%"
+Environment="APP_DIR=/home/deploy/tofu-ray-commerce"
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
