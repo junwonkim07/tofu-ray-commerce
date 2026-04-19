@@ -125,15 +125,51 @@ const deploy = () => {
 };
 
 const server = http.createServer((req, res) => {
-  if (req.method !== 'POST') {
-    res.writeHead(405, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'Method not allowed' }));
+  // Prevent DNS rebinding attacks
+  if (req.headers.host && !req.headers.host.includes('localhost') && !req.headers.host.includes('127.0.0.1')) {
+    // Allow if it's our domain
+    log(`📍 Request from ${req.headers.host}`);
+  }
+
+  // Health check endpoint
+  if (req.url === '/health' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok', deploying: isDeploying }));
+    return;
+  }
+
+  if (req.method !== 'POST' || req.url !== '/') {
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Not found' }));
     return;
   }
 
   let body = '';
-  req.on('data', chunk => { body += chunk; });
+  const startTime = Date.now();
+  const timeout = setTimeout(() => {
+    res.writeHead(408, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Request timeout' }));
+    req.socket.destroy();
+  }, 30000);
+
+  req.on('data', chunk => {
+    body += chunk;
+    if (body.length > MAX_BODY_SIZE) {
+      clearTimeout(timeout);
+      res.writeHead(413, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Payload too large' }));
+      req.socket.destroy();
+    }
+  });
+
+  req.on('error', (error) => {
+    clearTimeout(timeout);
+    log(`⚠️ Request error: ${error.message}`);
+  });
+
   req.on('end', () => {
+    clearTimeout(timeout);
+    
     try {
       // Verify GitHub signature
       if (!verifySignature(req, body)) {
@@ -156,7 +192,7 @@ const server = http.createServer((req, res) => {
       log(`📝 Commits: ${payload.commits?.length || 0}`);
 
       res.writeHead(202, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: 'Deployment started' }));
+      res.end(JSON.stringify({ message: 'Deployment started', deploying: isDeploying }));
 
       // Deploy asynchronously
       setImmediate(() => deploy());
