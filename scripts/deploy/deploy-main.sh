@@ -45,8 +45,9 @@ if [ -n "$SAVED_ENV" ]; then
   echo "$SAVED_ENV" > .env.production
 fi
 
-# Clear Docker build cache to ensure fresh build
+# Clear all Docker resources including BuildKit cache
 docker buildx prune --all -f || true
+docker system prune -a -f || true
 
 docker compose --env-file .env.production -f "$COMPOSE_FILE" up -d --build --remove-orphans
 
