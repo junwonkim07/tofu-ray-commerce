@@ -5,7 +5,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 ENV NODE_ENV=production
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends python3 make g++ \
+  && apt-get install -y --no-install-recommends python3 make g++ pkg-config libsqlite3-dev \
   && rm -rf /var/lib/apt/lists/*
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
@@ -15,6 +15,7 @@ WORKDIR /app
 COPY . .
 
 RUN pnpm install --frozen-lockfile
+RUN cd apps/backend && npm config set build_from_source true && npm config set sqlite /usr && pnpm rebuild sqlite3
 RUN pnpm --filter @tofu-ray/backend build
 
 EXPOSE 5000
