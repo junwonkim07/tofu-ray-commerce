@@ -78,7 +78,7 @@ export default function AdminLoginPage() {
                   type="password"
                   name="adminPassword"
                   autoComplete="new-password"
-                  placeholder="••••••••••••••••"
+                  placeholder="비밀번호"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
