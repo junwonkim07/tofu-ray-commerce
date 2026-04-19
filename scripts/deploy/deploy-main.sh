@@ -45,7 +45,7 @@ if [ -n "$SAVED_ENV" ]; then
   echo "$SAVED_ENV" > .env.production
 fi
 
-docker compose --env-file .env.production -f "$COMPOSE_FILE" up -d --build --remove-orphans
+docker compose --env-file .env.production -f "$COMPOSE_FILE" up -d --build --remove-orphans --no-cache
 
 for i in {1..30}; do
   if curl -fsS http://127.0.0.1:3000/health > /dev/null; then
