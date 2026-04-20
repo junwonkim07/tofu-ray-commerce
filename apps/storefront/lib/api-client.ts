@@ -65,13 +65,19 @@ async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<Api
     })
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Unknown error' }))
-      return { error: error.error || `HTTP ${response.status}` }
+      try {
+        const errorData = await response.json()
+        return { error: errorData.error || `HTTP ${response.status}: ${response.statusText}` }
+      } catch (parseError) {
+        // If JSON parsing fails, return status-based error
+        return { error: `Server error (${response.status}): ${response.statusText}` }
+      }
     }
 
     const data = await response.json()
     return { data }
   } catch (error) {
+    console.error('API Error:', error)
     return { error: error instanceof Error ? error.message : 'Network error' }
   }
 }
