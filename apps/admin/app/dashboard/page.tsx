@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -19,7 +18,6 @@ interface DashboardStats {
 }
 
 export default function DashboardPage() {
-  const router = useRouter()
   const [stats, setStats] = useState<DashboardStats>({
     orderCount: 0,
     inquiryCount: 0,
