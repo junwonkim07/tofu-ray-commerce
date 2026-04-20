@@ -5,8 +5,7 @@ import { useMemo, useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/lib/auth-context'
-import { orderAPI } from '@/lib/api-client'
-import { formatPrice } from '@/lib/utils'
+import { orderAPI, type OrderResponse } from '@/lib/api-client'
 
 const subscriptionInfo = {
   product: 'VPN Subscription - Premium',
@@ -15,25 +14,6 @@ const subscriptionInfo = {
   status: '활성',
 }
 
-interface OrderItem {
-  product?: { title: string }
-  title?: string
-  quantity: number
-}
-
-type Order = {
-  id: string
-  userId: string | null
-  orderNumber: string
-  items: OrderItem[]
-  totalPrice: number
-  currency: string
-  email: string
-  firstName: string
-  lastName: string
-  status: string
-  createdAt: string
-}
 
 function formatLastLogin(value: string | null) {
   if (!value) {
@@ -84,7 +64,7 @@ function getStatusLabel(status: string) {
 
 export default function MyPage() {
   const { user, isAuthenticated, isLoading } = useAuth()
-  const [orders, setOrders] = useState<Order[]>([])
+  const [orders, setOrders] = useState<OrderResponse[]>([])
   const [ordersLoading, setOrdersLoading] = useState(false)
 
   useEffect(() => {
@@ -200,7 +180,7 @@ export default function MyPage() {
         ) : (
           <div className="space-y-3">
             {orders.map((order) => (
-              <div key={order.id} className="border rounded-lg p-4 hover:bg-muted/50 transition">
+              <div key={order.orderId} className="border rounded-lg p-4 hover:bg-muted/50 transition">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-3">
                   <div>
                     <p className="font-mono font-semibold text-lg">{order.orderNumber}</p>
@@ -209,32 +189,6 @@ export default function MyPage() {
                   <Badge className={getStatusBadgeColor(order.status)}>
                     {getStatusLabel(order.status)}
                   </Badge>
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm mb-3 pb-3 border-t">
-                  <div>
-                    <p className="text-muted-foreground">결제 금액</p>
-                    <p className="font-semibold">{formatPrice(order.totalPrice, order.currency)}</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">구매자</p>
-                    <p className="font-semibold">{order.firstName} {order.lastName}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-1 text-sm mb-3">
-                  <p className="text-muted-foreground">주문 상품:</p>
-                  <ul className="space-y-1">
-                    {order.items && order.items.length > 0 ? (
-                      order.items.map((item: OrderItem, index: number) => (
-                        <li key={index} className="text-sm">
-                          • {item.product?.title || item.title || '상품'} × {item.quantity}
-                        </li>
-                      ))
-                    ) : (
-                      <li className="text-muted-foreground text-xs">상품 정보 없음</li>
-                    )}
-                  </ul>
                 </div>
 
                 {order.status === 'pending' && (
